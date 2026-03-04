@@ -1,80 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exchange-O-Gram</title>
-    <meta name="description" content="The ORIGINAL photo-sharing app from 2013 because Instagram was too mainstream">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: bohrder-box; }
-        :root {
-            --bg: #0a0a0a; --card-bg: #141414; --accent: #e8443a;
-            --accent-glow: rgba(232, 68, 58, 0.3); --text: #f0ece4;
-            --text-muted: #8a8680; --border: #2a2a2a;
-        }
-        body { font-family: 'Source Sans Pro', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1000; }
-        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
-        header { padding: 40px 0 20px; text-align: center; border-bottom: 1px solid var(--border); }
-        .logo { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 4vw, 2.4rem); letter-spacing: 6px; text-transform: uppercase; color: var(--text); }
-        .logo span { color: var(--accent); }
-        .hero { text-align: center; padding: 80px 0 60px; position: relative; }
-        .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 10vw, 7rem); line-height: 0.95; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; animation: fadeUp 0.8s ease-out; }
-        .hero h1 .highlight { color: var(--accent); position: relative; display: inline-block; }
-        .hero h1 .highlight::after { content: ''; position: absolute; bottom: 4px; left: 0; right: 0; height: 4px; background: var(--accent); opacity: 0.4; }
-        .hero-sub { font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--text-muted); margin-top: 20px; letter-spacing: 1px; animation: fadeUp 0.8s ease-out 0.2s both; }
-        .tagline-card { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 40px; margin: 0 0 50px; animation: fadeUp 0.8s ease-out 0.4s both; }
-        .tagline-card p { font-size: clamp(1.1rem, 2vw, 1.35rem); line-height: 1.6; color: var(--text); }
-        .tagline-card .emoji { font-size: 1.4em; margin-left: 6px; }
-        .quote-section { margin: 0 0 60px; padding: 30px 40px; position: relative; animation: fadeUp 0.8s ease-out 0.6s both; }
-        .quote-section::before { content: '"'; font-family: 'Bebas Neue', sans-serif; font-size: 8rem; color: var(--accent); opacity: 0.2; position: absolute; top: -30px; left: 10px; line-height: 1; }
-        .quote-text { font-style: italic; font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.6; color: var(--text); margin-bottom: 12px; }
-        .quote-attribution { color: var(--text-muted); font-size: 0.95rem; letter-spacing: 1px; }
-        .quote-attribution strong { color: var(--accent); font-weight: 600; }
-        .video-section { margin: 0 0 80px; animation: fadeUp 0.8s ease-out 0.8s both; }
-        .video-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 4px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid var(--border); background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        footer { border-top: 1px solid var(--border); padding: 30px 0; text-align: center; color: var(--text-muted); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 600px) { .tagline-card, .quote-section { padding: 24px; } .hero { padding: 50px 0 40px; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exchange-O-Gram</title>
+<meta name="description" content="The ORIGINAL photo-sharing app from 2013 because Instagram was too mainstream">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--card-bg:#141414;--accent:#e8443a;--accent-glow:rgba(232,68,58,0.3);--text:#f0ece4;--text-muted:#8a8680;--border:#2a2a2a}
+body{font-family:'Source Sans Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.container{max-width:900px;margin:0 auto;padding:0 24px}
+header{padding:20px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,10,0.95);backdrop-filter:blur(10px);z-index:100}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:6px;text-transform:uppercase;color:var(--text);text-decoration:none}
+.logo span{color:var(--accent)}
+.auth-area{display:flex;align-items:center;gap:12px}
+#user-info{font-size:0.85rem;color:var(--text-muted)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#d63830;box-shadow:0 0 20px var(--accent-glow)}
+.btn-secondary{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+.btn-secondary:hover{color:var(--text);border-color:var(--text-muted)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.hero{text-align:center;padding:50px 0 40px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,6rem);line-height:0.95;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.hero h1 .highlight{color:var(--accent)}
+.hero-sub{font-size:1.1rem;color:var(--text-muted);margin-top:16px;letter-spacing:1px}
+.movie-still-section{margin:0 0 40px;position:relative;overflow:hidden;border:1px solid var(--border)}
+.movie-still-section img{width:100%;display:block;max-height:300px;object-fit:cover;opacity:0.7}
+.movie-still-section .overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:20px;background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 60%)}
+.movie-still-section .caption{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:var(--text-muted)}
+.upload-section{margin:0 0 40px;background:var(--card-bg);border:1px solid var(--border);padding:24px}
+.upload-section h2{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:4px;margin-bottom:16px;color:var(--accent)}
+.upload-form{display:flex;flex-direction:column;gap:12px}
+.upload-form input[type=file]{display:none}
+.file-label{display:flex;align-items:center;justify-content:center;gap:8px;padding:32px;border:2px dashed var(--border);cursor:pointer;color:var(--text-muted);transition:all 0.2s;font-size:0.9rem}
+.file-label:hover,.file-label.has-file{border-color:var(--accent);color:var(--accent)}
+.upload-form input[type=text]{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:inherit;font-size:0.95rem;outline:none;transition:border 0.2s}
+.upload-form input[type=text]:focus{border-color:var(--accent)}
+.upload-progress{height:3px;background:var(--border);margin-top:8px;display:none}
+.upload-progress-bar{height:100%;background:var(--accent);width:0;transition:width 0.3s}
+.gallery-section{margin:0 0 60px}
+.gallery-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.gallery-header h2{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:4px;color:var(--accent)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px}
+.photo-card{position:relative;aspect-ratio:1;overflow:hidden;background:var(--card-bg);cursor:pointer}
+.photo-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s,opacity 0.3s;opacity:0.85}
+.photo-card:hover img{transform:scale(1.05);opacity:1}
+.photo-card .card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 50%);opacity:0;transition:opacity 0.3s;display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.photo-card:hover .card-overlay{opacity:1}
+.photo-card .card-caption{color:#fff;font-size:0.85rem;font-weight:600;margin-bottom:4px}
+.photo-card .card-meta{color:rgba(255,255,255,0.6);font-size:0.75rem}
+.photo-card .delete-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.7);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:0.8rem;transition:background 0.2s}
+.photo-card:hover .delete-btn{display:flex}
+.photo-card .delete-btn:hover{background:var(--accent)}
+.gallery-empty{text-align:center;padding:80px 20px;color:var(--text-muted);border:1px dashed var(--border)}
+.gallery-empty p{font-size:1.1rem;margin-bottom:8px}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.lightbox.active{display:flex}
+.lightbox img{max-width:100%;max-height:75vh;object-fit:contain;border:1px solid var(--border)}
+.lightbox-caption{margin-top:16px;color:var(--text);font-size:1rem;text-align:center}
+.lightbox-meta{margin-top:6px;color:var(--text-muted);font-size:0.85rem;text-align:center}
+.lightbox-close{position:absolute;top:20px;right:20px;background:transparent;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;padding:8px;line-height:1}
+.lightbox-close:hover{color:var(--accent)}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:none;color:var(--text);font-size:1.5rem;cursor:pointer;padding:12px 16px;line-height:1}
+.lightbox-nav:hover{background:rgba(232,68,58,0.4)}
+.lightbox-nav.prev{left:10px}
+.lightbox-nav.next{right:10px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:none;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-box{background:var(--card-bg);border:1px solid var(--border);padding:32px;width:100%;max-width:380px}
+.modal-box h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:4px;margin-bottom:20px;color:var(--accent)}
+.modal-box input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:inherit;font-size:0.95rem;outline:none;margin-bottom:12px;transition:border 0.2s}
+.modal-box input:focus{border-color:var(--accent)}
+.modal-error{color:var(--accent);font-size:0.85rem;margin-top:8px;display:none}
+.modal-footer{display:flex;gap:12px;margin-top:8px}
+footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;color:var(--text-muted);font-size:0.8rem;letter-spacing:2px;text-transform:uppercase}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card-bg);border:1px solid var(--border);color:var(--text);padding:10px 20px;font-size:0.9rem;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none}
+.toast.show{opacity:1}
+@media(max-width:600px){.gallery-grid{grid-template-columns:repeat(2,1fr)}.header-inner{flex-wrap:wrap}}
+</style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">Exchange<span>-O-</span>Gram</div>
-        </div>
-    </header>
-    <main class="container">
-        <section class="hero">
-            <h1>Welcome to<br><span class="highlight">Exchange-O-Gram!</span></h1>
-            <p class="hero-sub">Est. 2013 — Before it was cool.</p>
-        </section>
-        <div class="tagline-card">
-            <p>The ORIGINAL photo-sharing app from 2013 because Instagram was too mainstream <span class="emoji">😂</span></p>
-        </div>
-        <div class="quote-section">
-            <p class="quote-text">"It's like Instagram but it's an EXCHANGE!"</p>
-            <p class="quote-attribution"><strong>Billy</strong> (Vince Vaughn) — The Internship</p>
-        </div>
-        <div class="video-section">
-            <p class="video-label">The Scene That Started It All</p>
-            <div class="video-wrapper">
-                <iframe 
-                    src="https://www.youtube.com/embed/jxvdsdGavq0" 
-                    title="The Internship - Exchange-O-Gram" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-    </main>
-    <footer>
-        <div class="container">
-            Exchange-O-Gram &copy; 2025
-        </div>
-    </footer>
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="logo">Exchange<span>-O-</span>Gram</a>
+      <div class="auth-area">
+        <span id="user-info"></span>
+        <button class="btn btn-primary" id="login-btn" onclick="showLoginModal()">Log In</button>
+        <button class="btn btn-secondary" id="logout-btn" onclick="doLogout()" style="display:none">Log Out</button>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="container">
+  <section class="hero">
+    <h1>Welcome to<br><span class="highlight">Exchange-O-Gram!</span></h1>
+    <p class="hero-sub">Est. 2013 &mdash; Before it was cool.</p>
+  </section>
+  <div class="movie-still-section" id="movie-still-wrap">
+    <img id="movie-still-img" src="" alt="The Internship Exchange-O-Gram scene" style="display:none">
+    <div class="overlay"><span class="caption">The Internship, 2013</span></div>
+  </div>
+  <div class="upload-section" id="upload-section" style="display:none">
+    <h2>+ Upload Photo</h2>
+    <div class="upload-form">
+      <label class="file-label" id="file-label" for="photo-file">
+        <span id="file-label-text">Choose a photo</span>
+      </label>
+      <input type="file" id="photo-file" accept="image/*" onchange="handleFileSelect(this)">
+      <input type="text" id="photo-caption" placeholder="Add a caption..." maxlength="200">
+      <div class="upload-progress" id="upload-progress">
+        <div class="upload-progress-bar" id="progress-bar"></div>
+      </div>
+      <button class="btn btn-primary" id="upload-btn" onclick="uploadPhoto()">Upload</button>
+    </div>
+  </div>
+  <section class="gallery-section">
+    <div class="gallery-header"><h2>Gallery</h2></div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="gallery-empty"><p>No photos yet</p><small>Log in to upload!</small></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="container">Exchange-O-Gram &copy; 2025</div>
+</footer>
+<div class="modal" id="login-modal">
+  <div class="modal-box">
+    <h3>Log In</h3>
+    <input type="email" id="login-email" placeholder="Email" autocomplete="username">
+    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+    <div class="modal-error" id="login-error"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="doLogin()">Log In</button>
+      <button class="btn btn-secondary" onclick="hideLoginModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">X</button>
+  <button class="lightbox-nav prev" onclick="lightboxNav(-1)">&lt;</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+  <div class="lightbox-meta" id="lightbox-meta"></div>
+  <button class="lightbox-nav next" onclick="lightboxNav(1)">&gt;</button>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
+import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
+import{getFirestore,collection,addDoc,deleteDoc,doc,query,orderBy,onSnapshot,serverTimestamp}from'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import{getStorage,ref,uploadBytesResumable,getDownloadURL,deleteObject}from'https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js';
+const FC={apiKey:"AIzaSyAkFsLgWMjgtfdbymuR3iefiFQTwvDyTZg",authDomain:"exchangogram-e7316.firebaseapp.com",projectId:"exchangogram-e7316",storageBucket:"exchangogram-e7316.firebasestorage.app",messagingSenderId:"674032539446",appId:"1:674032539446:web:bbaca749c8f234fda0c597"};
+const app=initializeApp(FC);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const storage=getStorage(app);
+let currentUser=null,photos=[],lightboxIndex=0;
+async function loadMovieStill(){try{const r=ref(storage,'site/movie-still.jpg');const url=await getDownloadURL(r);const img=document.getElementById('movie-still-img');img.src=url;img.style.display='block';}catch(e){document.getElementById('movie-still-wrap').style.display='none';}}
+onAuthStateChanged(auth,user=>{currentUser=user;document.getElementById('login-btn').style.display=user?'none':'';document.getElementById('logout-btn').style.display=user?'':'none';document.getElementById('upload-section').style.display=user?'':'none';document.getElementById('user-info').textContent=user?user.email.split('@')[0]:'';renderGallery();});
+const q=query(collection(db,'photos'),orderBy('createdAt','desc'));
+onSnapshot(q,snap=>{photos=[];snap.forEach(d=>{photos.push({id:d.id,...d.data()});});renderGallery();});
+loadMovieStill();
+function renderGallery(){const grid=document.getElementById('gallery-grid');if(!photos.length){grid.innerHTML='<div class="gallery-empty"><p>No photos yet</p><small>'+(currentUser?'Upload the first one!':'Log in to upload!')+'</small></div>';return;}grid.innerHTML=photos.map((p,i)=>'<div class="photo-card" onclick="openLightbox('+i+')">'+'<img src="'+p.url+'" alt="'+(p.caption||'')+'" loading="lazy">'+'<div class="card-overlay"><div class="card-caption">'+(p.caption||'')+'</div><div class="card-meta">'+(p.uploader||'')+(p.createdAt?' &bull; '+new Date(p.createdAt.seconds*1000).toLocaleDateString():'')+'</div></div>'+(currentUser?'<button class="delete-btn" onclick="deletePhoto(event,''+p.id+'',''+( p.storagePath||'')+'')">Del</button>':'')+'</div>').join('');}
+window.renderGallery=renderGallery;
+window.handleFileSelect=function(input){if(input.files&&input.files[0]){document.getElementById('file-label-text').textContent=input.files[0].name;document.getElementById('file-label').classList.add('has-file');}};
+window.uploadPhoto=async function(){const file=document.getElementById('photo-file').files[0];const caption=document.getElementById('photo-caption').value.trim();if(!file){showToast('Please select a photo');return;}if(!currentUser){showToast('Please log in first');return;}const btn=document.getElementById('upload-btn');btn.disabled=true;btn.textContent='Uploading...';document.getElementById('upload-progress').style.display='block';const path='photos/'+currentUser.uid+'/'+Date.now()+'_'+file.name;const storageRef=ref(storage,path);const task=uploadBytesResumable(storageRef,file);task.on('state_changed',snap=>{const pct=(snap.bytesTransferred/snap.totalBytes)*100;document.getElementById('progress-bar').style.width=pct+'%';},err=>{showToast('Upload failed: '+err.message);btn.disabled=false;btn.textContent='Upload';},async()=>{const url=await getDownloadURL(task.snapshot.ref);await addDoc(collection(db,'photos'),{url,storagePath:path,caption,uploader:currentUser.email.split('@')[0],uid:currentUser.uid,createdAt:serverTimestamp()});document.getElementById('photo-file').value='';document.getElementById('photo-caption').value='';document.getElementById('file-label-text').textContent='Choose a photo';document.getElementById('file-label').classList.remove('has-file');document.getElementById('upload-progress').style.display='none';document.getElementById('progress-bar').style.width='0';btn.disabled=false;btn.textContent='Upload';showToast('Photo uploaded!');});};
+window.deletePhoto=async function(e,id,storagePath){e.stopPropagation();if(!confirm('Delete this photo?'))return;try{await deleteDoc(doc(db,'photos',id));if(storagePath)await deleteObject(ref(storage,storagePath)).catch(()=>{});showToast('Deleted');}catch(err){showToast('Delete failed: '+err.message);}};
+window.openLightbox=function(i){lightboxIndex=i;showLightboxPhoto();document.getElementById('lightbox').classList.add('active');};
+window.closeLightbox=function(){document.getElementById('lightbox').classList.remove('active');};
+window.closeLightboxOnBg=function(e){if(e.target===document.getElementById('lightbox'))closeLightbox();};
+window.lightboxNav=function(dir){lightboxIndex=(lightboxIndex+dir+photos.length)%photos.length;showLightboxPhoto();};
+function showLightboxPhoto(){const p=photos[lightboxIndex];document.getElementById('lightbox-img').src=p.url;document.getElementById('lightbox-caption').textContent=p.caption||'';document.getElementById('lightbox-meta').textContent=(p.uploader||'')+(p.createdAt?' · '+new Date(p.createdAt.seconds*1000).toLocaleDateString():'');}
+window.showLoginModal=function(){document.getElementById('login-modal').classList.add('active');};
+window.hideLoginModal=function(){document.getElementById('login-modal').classList.remove('active');};
+window.doLogin=async function(){const email=document.getElementById('login-email').value;const pw=document.getElementById('login-password').value;const err=document.getElementById('login-error');err.style.display='none';try{await signInWithEmailAndPassword(auth,email,pw);hideLoginModal();showToast('Welcome back!');}catch(e){err.textContent='Login failed. Check your credentials.';err.style.display='block';}};
+window.doLogout=async function(){await signOut(auth);showToast('Logged out');};
+window.showToast=function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);};
+document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('active'))return;if(e.key==='Escape')closeLightbox();if(e.key==='ArrowLeft')lightboxNav(-1);if(e.key==='ArrowRight')lightboxNav(1);});
+document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
 </body>
 </html>

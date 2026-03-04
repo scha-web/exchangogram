@@ -160,28 +160,91 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 const storage=getStorage(app);
 let currentUser=null,photos=[],lightboxIndex=0;
-async function loadMovieStill(){try{const r=ref(storage,'site/movie-still.jpg');const url=await getDownloadURL(r);const img=document.getElementById('movie-still-img');img.src=url;img.style.display='block';}catch(e){document.getElementById('movie-still-wrap').style.display='none';}}
-onAuthStateChanged(auth,user=>{currentUser=user;document.getElementById('login-btn').style.display=user?'none':'';document.getElementById('logout-btn').style.display=user?'':'none';document.getElementById('upload-section').style.display=user?'':'none';document.getElementById('user-info').textContent=user?user.email.split('@')[0]:'';renderGallery();});
-const q=query(collection(db,'photos'),orderBy('createdAt','desc'));
+async function loadMovieStill(){try{const r=ref(storage,"site/movie-still.jpg");const url=await getDownloadURL(r);const img=document.getElementById("movie-still-img");img.src=url;img.style.display="block";}catch(e){document.getElementById("movie-still-wrap").style.display="none";}}
+onAuthStateChanged(auth,user=>{currentUser=user;document.getElementById("login-btn").style.display=user?"none":"";document.getElementById("logout-btn").style.display=user?"":"none";document.getElementById("upload-section").style.display=user?"":"none";document.getElementById("user-info").textContent=user?user.email.split("@")[0]:"";renderGallery();});
+const q=query(collection(db,"photos"),orderBy("createdAt","desc"));
 onSnapshot(q,snap=>{photos=[];snap.forEach(d=>{photos.push({id:d.id,...d.data()});});renderGallery();});
 loadMovieStill();
-function renderGallery(){const grid=document.getElementById('gallery-grid');if(!photos.length){grid.innerHTML='<div class="gallery-empty"><p>No photos yet</p><small>'+(currentUser?'Upload the first one!':'Log in to upload!')+'</small></div>';return;}grid.innerHTML=photos.map((p,i)=>'<div class="photo-card" onclick="openLightbox('+i+')">'+'<img src="'+p.url+'" alt="'+(p.caption||'')+'" loading="lazy">'+'<div class="card-overlay"><div class="card-caption">'+(p.caption||'')+'</div><div class="card-meta">'+(p.uploader||'')+(p.createdAt?' &bull; '+new Date(p.createdAt.seconds*1000).toLocaleDateString():'')+'</div></div>'+(currentUser?'<button class="delete-btn" onclick="deletePhoto(event,''+p.id+'',''+( p.storagePath||'')+'')">Del</button>':'')+'</div>').join('');}
+function renderGallery(){
+  const grid=document.getElementById("gallery-grid");
+  if(!photos.length){
+    grid.innerHTML="<div class=\"gallery-empty\"><p>No photos yet</p><small>"+(currentUser?"Upload the first one!":"Log in to upload!")+"</small></div>";
+    return;
+  }
+  const cards=photos.map((p,i)=>{
+    const card=document.createElement("div");
+    card.className="photo-card";
+    card.innerHTML="<img src=\""+p.url+"\" alt=\""+(p.caption||"")+"\" loading=\"lazy\"><div class=\"card-overlay\"><div class=\"card-caption\">"+(p.caption||"")+"</div><div class=\"card-meta\">"+(p.uploader||"")+(p.createdAt?" &bull; "+new Date(p.createdAt.seconds*1000).toLocaleDateString():"")+"</div></div>";
+    card.addEventListener("click",()=>openLightbox(i));
+    if(currentUser){
+      const btn=document.createElement("button");
+      btn.className="delete-btn";
+      btn.textContent="Del";
+      btn.addEventListener("click",(e)=>{e.stopPropagation();deletePhotoById(p.id,p.storagePath||"");});
+      card.appendChild(btn);
+    }
+    return card;
+  });
+  grid.innerHTML="";
+  cards.forEach(c=>grid.appendChild(c));
+}
 window.renderGallery=renderGallery;
-window.handleFileSelect=function(input){if(input.files&&input.files[0]){document.getElementById('file-label-text').textContent=input.files[0].name;document.getElementById('file-label').classList.add('has-file');}};
-window.uploadPhoto=async function(){const file=document.getElementById('photo-file').files[0];const caption=document.getElementById('photo-caption').value.trim();if(!file){showToast('Please select a photo');return;}if(!currentUser){showToast('Please log in first');return;}const btn=document.getElementById('upload-btn');btn.disabled=true;btn.textContent='Uploading...';document.getElementById('upload-progress').style.display='block';const path='photos/'+currentUser.uid+'/'+Date.now()+'_'+file.name;const storageRef=ref(storage,path);const task=uploadBytesResumable(storageRef,file);task.on('state_changed',snap=>{const pct=(snap.bytesTransferred/snap.totalBytes)*100;document.getElementById('progress-bar').style.width=pct+'%';},err=>{showToast('Upload failed: '+err.message);btn.disabled=false;btn.textContent='Upload';},async()=>{const url=await getDownloadURL(task.snapshot.ref);await addDoc(collection(db,'photos'),{url,storagePath:path,caption,uploader:currentUser.email.split('@')[0],uid:currentUser.uid,createdAt:serverTimestamp()});document.getElementById('photo-file').value='';document.getElementById('photo-caption').value='';document.getElementById('file-label-text').textContent='Choose a photo';document.getElementById('file-label').classList.remove('has-file');document.getElementById('upload-progress').style.display='none';document.getElementById('progress-bar').style.width='0';btn.disabled=false;btn.textContent='Upload';showToast('Photo uploaded!');});};
-window.deletePhoto=async function(e,id,storagePath){e.stopPropagation();if(!confirm('Delete this photo?'))return;try{await deleteDoc(doc(db,'photos',id));if(storagePath)await deleteObject(ref(storage,storagePath)).catch(()=>{});showToast('Deleted');}catch(err){showToast('Delete failed: '+err.message);}};
-window.openLightbox=function(i){lightboxIndex=i;showLightboxPhoto();document.getElementById('lightbox').classList.add('active');};
-window.closeLightbox=function(){document.getElementById('lightbox').classList.remove('active');};
-window.closeLightboxOnBg=function(e){if(e.target===document.getElementById('lightbox'))closeLightbox();};
+window.handleFileSelect=function(input){if(input.files&&input.files[0]){document.getElementById("file-label-text").textContent=input.files[0].name;document.getElementById("file-label").classList.add("has-file");}};
+window.uploadPhoto=async function(){
+  const file=document.getElementById("photo-file").files[0];
+  const caption=document.getElementById("photo-caption").value.trim();
+  if(!file){showToast("Please select a photo");return;}
+  if(!currentUser){showToast("Please log in first");return;}
+  const btn=document.getElementById("upload-btn");
+  btn.disabled=true;btn.textContent="Uploading...";
+  document.getElementById("upload-progress").style.display="block";
+  const path="photos/"+currentUser.uid+"/"+Date.now()+"_"+file.name;
+  const storageRef=ref(storage,path);
+  const task=uploadBytesResumable(storageRef,file);
+  task.on("state_changed",
+    snap=>{const pct=(snap.bytesTransferred/snap.totalBytes)*100;document.getElementById("progress-bar").style.width=pct+"%";},
+    err=>{showToast("Upload failed: "+err.message);btn.disabled=false;btn.textContent="Upload";},
+    async()=>{
+      const url=await getDownloadURL(task.snapshot.ref);
+      await addDoc(collection(db,"photos"),{url,storagePath:path,caption,uploader:currentUser.email.split("@")[0],uid:currentUser.uid,createdAt:serverTimestamp()});
+      document.getElementById("photo-file").value="";
+      document.getElementById("photo-caption").value="";
+      document.getElementById("file-label-text").textContent="Choose a photo";
+      document.getElementById("file-label").classList.remove("has-file");
+      document.getElementById("upload-progress").style.display="none";
+      document.getElementById("progress-bar").style.width="0";
+      btn.disabled=false;btn.textContent="Upload";
+      showToast("Photo uploaded!");
+    }
+  );
+};
+async function deletePhotoById(id,storagePath){
+  if(!confirm("Delete this photo?"))return;
+  try{
+    await deleteDoc(doc(db,"photos",id));
+    if(storagePath)await deleteObject(ref(storage,storagePath)).catch(()=>{});
+    showToast("Deleted");
+  }catch(err){showToast("Delete failed: "+err.message);}
+}
+window.openLightbox=function(i){lightboxIndex=i;showLightboxPhoto();document.getElementById("lightbox").classList.add("active");};
+window.closeLightbox=function(){document.getElementById("lightbox").classList.remove("active");};
+window.closeLightboxOnBg=function(e){if(e.target===document.getElementById("lightbox"))closeLightbox();};
 window.lightboxNav=function(dir){lightboxIndex=(lightboxIndex+dir+photos.length)%photos.length;showLightboxPhoto();};
-function showLightboxPhoto(){const p=photos[lightboxIndex];document.getElementById('lightbox-img').src=p.url;document.getElementById('lightbox-caption').textContent=p.caption||'';document.getElementById('lightbox-meta').textContent=(p.uploader||'')+(p.createdAt?' · '+new Date(p.createdAt.seconds*1000).toLocaleDateString():'');}
-window.showLoginModal=function(){document.getElementById('login-modal').classList.add('active');};
-window.hideLoginModal=function(){document.getElementById('login-modal').classList.remove('active');};
-window.doLogin=async function(){const email=document.getElementById('login-email').value;const pw=document.getElementById('login-password').value;const err=document.getElementById('login-error');err.style.display='none';try{await signInWithEmailAndPassword(auth,email,pw);hideLoginModal();showToast('Welcome back!');}catch(e){err.textContent='Login failed. Check your credentials.';err.style.display='block';}};
-window.doLogout=async function(){await signOut(auth);showToast('Logged out');};
-window.showToast=function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);};
-document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('active'))return;if(e.key==='Escape')closeLightbox();if(e.key==='ArrowLeft')lightboxNav(-1);if(e.key==='ArrowRight')lightboxNav(1);});
-document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function showLightboxPhoto(){const p=photos[lightboxIndex];document.getElementById("lightbox-img").src=p.url;document.getElementById("lightbox-caption").textContent=p.caption||"";document.getElementById("lightbox-meta").textContent=(p.uploader||"")+(p.createdAt?" · "+new Date(p.createdAt.seconds*1000).toLocaleDateString():"");}
+window.showLoginModal=function(){document.getElementById("login-modal").classList.add("active");};
+window.hideLoginModal=function(){document.getElementById("login-modal").classList.remove("active");};
+window.doLogin=async function(){
+  const email=document.getElementById("login-email").value;
+  const pw=document.getElementById("login-password").value;
+  const errEl=document.getElementById("login-error");
+  errEl.style.display="none";
+  try{await signInWithEmailAndPassword(auth,email,pw);hideLoginModal();showToast("Welcome back!");}
+  catch(e){errEl.textContent="Login failed. Check your credentials.";errEl.style.display="block";}
+};
+window.doLogout=async function(){await signOut(auth);showToast("Logged out");};
+window.showToast=function(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);};
+document.addEventListener("keydown",e=>{if(!document.getElementById("lightbox").classList.contains("active"))return;if(e.key==="Escape")closeLightbox();if(e.key==="ArrowLeft")lightboxNav(-1);if(e.key==="ArrowRight")lightboxNav(1);});
+document.getElementById("login-password").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
 </script>
 </body>
 </html>
